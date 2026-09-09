@@ -1,9 +1,10 @@
 produtos = []
+proximo_codigo = 1
 
 def cadastrar_produto():
+    global proximo_codigo
     print("\n--- CADASTRO DE PRODUTO ---")
-
-    codigo = len(produtos) + 1
+    codigo = proximo_codigo
 
     categoria = input("Categoria: ")
     marca = input("Marca: ")
@@ -23,6 +24,7 @@ def cadastrar_produto():
     }
 
     produtos.append(produto)
+    proximo_codigo += 1
 
     print("\nProduto cadastrado com sucesso!")
     print(f"Código do Produto: {codigo}")
@@ -157,7 +159,65 @@ def saida_estoque():
     print("\nSaída realizada com sucesso!")
     print(f"Novo estoque: {produto['quantidade']}")
 
+def editar_produto():
+    print("\n--- EDITAR PRODUTO ---")
+    codigo = int(input("Digite o código do produto: "))
+    produto = buscar_por_codigo(codigo)
 
+    if produto is None:
+        print("\nProduto não encontrado!")
+        return
+    
+    print("\nDeixe em branco o campo que não deseja alterar")
+
+    categoria = input(f"Categoria [{produto['categoria']}]: ")
+    marca = input(f"Marca [{produto['marca']}]: ")
+    modelo = input(f"Modelo [{produto['modelo']}]: ")
+    cor = input(f"Cor [{produto['cor']}]: ")
+    preco = input(f"Preço [{produto['preco']:.2f}]: ")
+
+    if categoria != "":
+        produto["categoria"] = categoria
+
+    if marca != "":
+        produto["marca"] = marca
+
+    if modelo != "":
+        produto["modelo"] = modelo
+
+    if cor != "":
+        produto["cor"] = cor
+
+    if preco != "":
+        produto["preco"] = float(preco)
+
+    print("\nProduto atualizado com sucesso!")
+
+def excluir_produto():
+    print("\n--- EXCLUIR PRODUTO ---")
+    codigo = int(input("Digite o código do produto: "))
+    produto = buscar_por_codigo(codigo)
+
+    if produto is None:
+        print("\nProduto não encontrado.")
+        return
+
+    print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
+
+    while True:
+        confirmacao = input("Deseja realmente excluir este produto? (s/n): ").lower()
+
+        if confirmacao == "s":
+            produtos.remove(produto)
+            print("\nProduto excluído com sucesso!")
+            break
+
+        elif confirmacao == "n":
+            print("\nExclusão cancelada.")
+            break
+
+        else:
+            print("\nOpção inválida. Digite apenas 's' ou 'n'.")
 
 
 
@@ -195,6 +255,12 @@ while True:
 
     elif opcao == "5":
         saida_estoque()
+    
+    elif opcao == "6":
+        editar_produto()
+
+    elif opcao == "7":
+        excluir_produto()
 
     elif opcao == "0":
         print("\n Sistema encerrado.")
