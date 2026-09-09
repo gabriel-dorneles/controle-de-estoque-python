@@ -6,7 +6,9 @@
         "modelo": "ng453",
         "cor": "Dourada",
         "quantidade": 6,
-        "preco": 149.9
+        "preco": 149.9,
+        "preco_custo": 0.0,
+        "estoque_minimo": 0
     },
     {
         "codigo": 3,
@@ -15,7 +17,9 @@
         "modelo": "2020T",
         "cor": "Prata",
         "quantidade": 2,
-        "preco": 870.0
+        "preco": 870.0,
+        "preco_custo": 0.0,
+        "estoque_minimo": 0
     },
     {
         "codigo": 4,
@@ -24,7 +28,9 @@
         "modelo": "extreme",
         "cor": "cinza",
         "quantidade": 3,
-        "preco": 390.0
+        "preco": 390.0,
+        "preco_custo": 0.0,
+        "estoque_minimo": 0
     },
     {
         "codigo": 5,
@@ -33,6 +39,19 @@
         "modelo": "P-6605",
         "cor": "Cinza",
         "quantidade": 0,
-        "preco": 149.9
+        "preco": 149.9,
+        "preco_custo": 0.0,
+        "estoque_minimo": 0
+    },
+    {
+        "codigo": 6,
+        "categoria": "Máquina de corte",
+        "marca": "Wmark",
+        "modelo": "ng-304",
+        "cor": "dourada",
+        "quantidade": 2,
+        "preco_custo": 120.0,
+        "preco": 180.0,
+        "estoque_minimo": 3
     }
 ]

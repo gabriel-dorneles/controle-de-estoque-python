@@ -16,6 +16,13 @@ def salvar_produtos():
         json.dump(produtos, arquivo, indent=4, ensure_ascii=False)
 
 produtos = carregar_produtos()
+
+for produto in produtos:
+    produto.setdefault("preco_custo", 0.0)
+    produto.setdefault("estoque_minimo", 0)
+
+salvar_produtos()
+
 if len(produtos) > 0:
     proximo_codigo = max(produto["codigo"] for produto in produtos) + 1
 else:
@@ -96,6 +103,33 @@ def ler_preco_opcional(mensagem, valor_atual):
         except ValueError:
             print("Digite um preço válido ou pressione Enter para manter o valor atual.")
 
+def ler_inteiro_opcional(mensagem, valor_atual):
+    while True:
+        entrada = input(mensagem).strip()
+
+        if entrada == "":
+            return valor_atual
+
+        try:
+            valor = int(entrada)
+
+            if valor >= 0:
+                return valor
+
+            print("O valor não pode ser negativo.")
+
+        except ValueError:
+            print("Digite um número inteiro válido ou pressione Enter para manter o valor atual.")
+
+def formatar_moeda(valor):
+    valor_formatado = f"{valor:,.2f}"
+
+    valor_formatado = valor_formatado.replace(",", "X")
+    valor_formatado = valor_formatado.replace(".", ",")
+    valor_formatado = valor_formatado.replace("X", ".")
+
+    return f"R$ {valor_formatado}"
+
 def normalizar_texto(texto):
     texto = texto.strip().casefold()
     texto = unicodedata.normalize("NFD", texto)
@@ -116,7 +150,9 @@ def cadastrar_produto():
     modelo = ler_texto_obrigatorio("Modelo: ")
     cor = ler_texto_obrigatorio("Cor: ")
     quantidade = ler_inteiro_nao_negativo("Quantidade: ")
-    preco = ler_preco("Preço: R$ ")
+    preco_custo = ler_preco("Preço de custo: R$ ")
+    preco = ler_preco("Preço de venda: R$ ")
+    estoque_minimo = ler_inteiro_nao_negativo("Estoque mínimo: ")
 
     produto = {
         "codigo": codigo,
@@ -125,7 +161,9 @@ def cadastrar_produto():
         "modelo": modelo,
         "cor": cor,
         "quantidade": quantidade,
-        "preco": preco
+        "preco_custo": preco_custo,
+        "preco": preco,
+        "estoque_minimo": estoque_minimo
     }
 
     produtos.append(produto)
@@ -150,7 +188,9 @@ def listar_produtos():
         print(f"Modelo: {produto['modelo']}")
         print(f"Cor: {produto['cor']}")
         print(f"Quantidade: {produto['quantidade']}")
-        print(f"Preço: R$ {produto['preco']:.2f}")
+        print(f"Estoque mínimo: {produto['estoque_minimo']}")
+        print(f"Preço de custo: {formatar_moeda(produto['preco_custo'])}")
+        print(f"Preço de venda: {formatar_moeda(produto['preco'])}")
 
 def buscar_produto():
     print("\n--- BUSCAR PRODUTO ---")
@@ -222,7 +262,8 @@ def buscar_produto():
         print(f"Modelo: {produto['modelo']}")
         print(f"Cor: {produto['cor']}")
         print(f"Quantidade: {produto['quantidade']}")
-        print(f"Preço: R$ {produto['preco']:.2f}")
+        print(f"Preço de custo: {formatar_moeda(produto['preco_custo'])}")
+        print(f"Preço de venda: {formatar_moeda(produto['preco'])}")
 
 
 def buscar_por_codigo(codigo):
@@ -310,9 +351,19 @@ def editar_produto():
         produto["cor"]
     )
 
+    produto["preco_custo"] = ler_preco_opcional(
+        f"Preço de custo [{produto['preco_custo']:.2f}]: ",
+        produto["preco_custo"]
+    )
+
     produto["preco"] = ler_preco_opcional(
-        f"Preço [{produto['preco']:.2f}]: ",
+        f"Preço de venda [{produto['preco']:.2f}]: ",
         produto["preco"]
+    )
+
+    produto["estoque_minimo"] = ler_inteiro_opcional(
+        f"Estoque mínimo [{produto['estoque_minimo']}]: ",
+        produto["estoque_minimo"]
     )
 
     salvar_produtos()
@@ -353,23 +404,28 @@ def relatorio_estoque():
         return
 
     total_unidades = 0
-    valor_total = 0
+    valor_custo_total = 0
+    valor_venda_total = 0
     categorias = {}
 
     for produto in produtos:
         total_unidades += produto["quantidade"]
-        valor_produto = produto["quantidade"] * produto["preco"]
-        valor_total += valor_produto
+        valor_custo_total += (produto["quantidade"] * produto["preco_custo"])
+        valor_venda_total += (produto["quantidade"] * produto["preco"])
         categoria = produto ["categoria"]
 
         if categoria in categorias:
             categorias[categoria] += produto["quantidade"]
         else:
             categorias[categoria] = produto["quantidade"]
+        
+        margem_potencial = valor_venda_total - valor_custo_total
 
     print(f"\nProdutos cadastrados: {len(produtos)}")
     print(f"Total de unidades: {total_unidades}")
-    print(f"Valor total do estoque: R$ {valor_total:.2f}")
+    print(f"Valor de custo do estoque: {formatar_moeda(valor_custo_total)}")
+    print(f"Valor potencial de venda: {formatar_moeda(valor_venda_total)}")
+    print(f"Margem bruta potencial: {formatar_moeda(margem_potencial)}")
 
     print("\n--- UNIDADES POR CATEGORIA ---")
 
@@ -381,11 +437,12 @@ def relatorio_estoque():
     encontrou_estoque_baixo = False
 
     for produto in produtos:
-        if produto["quantidade"] <=2:
+        if produto["quantidade"] <= produto["estoque_minimo"]:
             print(
                 f"Código {produto['codigo']} | "
                 f"{produto['marca']} {produto['modelo']} | "
-                f"Quantidade: {produto['quantidade']}"
+                f"Atual: {produto['quantidade']} | "
+                f"Mínimo: {produto['estoque_minimo']}"
             )
             encontrou_estoque_baixo = True
     if encontrou_estoque_baixo == False:
