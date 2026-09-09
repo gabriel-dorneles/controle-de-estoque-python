@@ -1,0 +1,29 @@
+[
+    {
+        "codigo": 1,
+        "categoria": "Máquina de corte",
+        "marca": "Kemei",
+        "modelo": "km2299",
+        "cor": "Dourada",
+        "quantidade": 5,
+        "preco": 149.9
+    },
+    {
+        "codigo": 3,
+        "categoria": "Máquina de acabamento",
+        "marca": "JRL",
+        "modelo": "2020T",
+        "cor": "Prata",
+        "quantidade": 2,
+        "preco": 870.0
+    },
+    {
+        "codigo": 4,
+        "categoria": "Prancha",
+        "marca": "Taiff",
+        "modelo": "extreme",
+        "cor": "cinza",
+        "quantidade": 3,
+        "preco": 390.0
+    }
+]

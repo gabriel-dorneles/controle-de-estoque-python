@@ -1,5 +1,25 @@
-produtos = []
-proximo_codigo = 1
+import json
+
+ARQUIVO = "produtos.json"
+
+def carregar_produtos():
+    try:
+        with open(ARQUIVO, "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo)
+
+    except FileNotFoundError:
+        return []
+
+def salvar_produtos():
+    with open(ARQUIVO, "w", encoding="utf-8") as arquivo:
+        json.dump(produtos, arquivo, indent=4, ensure_ascii=False)
+
+
+produtos = carregar_produtos()
+if len(produtos) > 0:
+    proximo_codigo = max(produto["codigo"] for produto in produtos) + 1
+else:
+    proximo_codigo = 1
 
 def cadastrar_produto():
     global proximo_codigo
@@ -25,6 +45,7 @@ def cadastrar_produto():
 
     produtos.append(produto)
     proximo_codigo += 1
+    salvar_produtos()
 
     print("\nProduto cadastrado com sucesso!")
     print(f"Código do Produto: {codigo}")
@@ -130,6 +151,7 @@ def entrada_estoque():
         return
 
     produto["quantidade"] += quantidade
+    salvar_produtos()
     print("\nEntrada realizada com sucesso!")
     print(f"Novo estoque: {produto['quantidade']}")
 
@@ -155,7 +177,7 @@ def saida_estoque():
         return
 
     produto["quantidade"] -= quantidade
-
+    salvar_produtos()
     print("\nSaída realizada com sucesso!")
     print(f"Novo estoque: {produto['quantidade']}")
 
@@ -191,6 +213,7 @@ def editar_produto():
     if preco != "":
         produto["preco"] = float(preco)
 
+    salvar_produtos()
     print("\nProduto atualizado com sucesso!")
 
 def excluir_produto():
@@ -209,6 +232,7 @@ def excluir_produto():
 
         if confirmacao == "s":
             produtos.remove(produto)
+            salvar_produtos()
             print("\nProduto excluído com sucesso!")
             break
 
