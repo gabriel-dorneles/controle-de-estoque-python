@@ -219,6 +219,52 @@ def excluir_produto():
         else:
             print("\nOpção inválida. Digite apenas 's' ou 'n'.")
 
+def relatorio_estoque():
+    print("\n========== RELATÓRIO DO ESTOQUE ==========")
+
+    if len(produtos) == 0:
+        pront("\nNenhum produto cadastrado!")
+        return
+
+    total_unidades = 0
+    valor_total = 0
+    categorias = {}
+
+    for produto in produtos:
+        total_unidades += produto["quantidade"]
+        valor_produto = produto["quantidade"] * produto["preco"]
+        valor_total += valor_produto
+        categoria = produto ["categoria"]
+
+        if categoria in categorias:
+            categorias[categoria] += produto["quantidade"]
+        else:
+            categorias[categoria] = produto["quantidade"]
+
+    print(f"\nProdutos cadastrados: {len(produtos)}")
+    print(f"Total de unidades: {total_unidades}")
+    print(f"Valor total do estoque: R$ {valor_total:.2f}")
+
+    print("\n--- UNIDADES POR CATEGORIA ---")
+
+    for categoria, quantidade in categorias.items():
+        print(f"{categoria}: {quantidade}")
+
+    print("\n--- ESTOQUE BAIXO ---")
+
+    encontrou_estoque_baixo = False
+
+    for produto in produtos:
+        if produto["quantidade"] <=2:
+            print(
+                f"Código {produto['codigo']} | "
+                f"{produto['marca']} {produto['modelo']} | "
+                f"Quantidade: {produto['quantidade']}"
+            )
+            encontrou_estoque_baixo = True
+    if encontrou_estoque_baixo == False:
+        print("Nenhum produto com estoque baixo.")
+
 
 
 
@@ -261,6 +307,9 @@ while True:
 
     elif opcao == "7":
         excluir_produto()
+
+    elif opcao == "8":
+        relatorio_estoque()
 
     elif opcao == "0":
         print("\n Sistema encerrado.")
