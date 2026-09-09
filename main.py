@@ -103,6 +103,67 @@ def buscar_produto():
         print(f"Quantidade: {produto['quantidade']}")
         print(f"Preço: R$ {produto['preco']:.2f}")
 
+
+def buscar_por_codigo(codigo):
+    for produto in produtos:
+        if produto["codigo"] == codigo:
+            return produto
+    return None
+
+def entrada_estoque():
+    print("\n--- ENTRADA DE ESTOQUE ---")
+    codigo = int(input("Digite o código do produto: "))
+    produto = buscar_por_codigo(codigo)
+
+    if produto is None:
+        print("\nProduto não encontrado!")
+        return
+
+    print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
+    print(f"Estoque atual: {produto['quantidade']}")
+    quantidade = int(input("Quantidade de entrada: "))
+
+    if quantidade <= 0:
+        print("\nA quantidade deve ser maior que zero.")
+        return
+
+    produto["quantidade"] += quantidade
+    print("\nEntrada realizada com sucesso!")
+    print(f"Novo estoque: {produto['quantidade']}")
+
+def saida_estoque():
+    print("\n--- SAÍDA DE ESTOQUE ---")
+    codigo = int(input("Digite o código do produto: "))
+    produto = buscar_por_codigo(codigo)
+
+    if produto is None:
+        print("\nProduto não encontrado!")
+        return
+
+    print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
+    print(f"Estoque atual: {produto['quantidade']}")
+    quantidade = int(input("Quantidade de saída: "))
+
+    if quantidade <= 0:
+        print("\nA quantidade deve ser maior que zero.")
+        return
+
+    if quantidade > produto["quantidade"]:
+        print("\nEstoque insuficiente!")
+        return
+
+    produto["quantidade"] -= quantidade
+
+    print("\nSaída realizada com sucesso!")
+    print(f"Novo estoque: {produto['quantidade']}")
+
+
+
+
+
+
+
+
 while True:
     print("\n==============================")
     print("      CONTROLE DE ESTOQUE")
@@ -128,6 +189,12 @@ while True:
 
     elif opcao == "3":
         buscar_produto()
+
+    elif opcao == "4":
+        entrada_estoque()
+
+    elif opcao == "5":
+        saida_estoque()
 
     elif opcao == "0":
         print("\n Sistema encerrado.")
