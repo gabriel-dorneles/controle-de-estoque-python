@@ -1,4 +1,5 @@
 import json
+import unicodedata
 
 ARQUIVO = "produtos.json"
 
@@ -95,6 +96,15 @@ def ler_preco_opcional(mensagem, valor_atual):
         except ValueError:
             print("Digite um preço válido ou pressione Enter para manter o valor atual.")
 
+def normalizar_texto(texto):
+    texto = texto.strip().casefold()
+    texto = unicodedata.normalize("NFD", texto)
+    texto = "".join(
+        caractere
+        for caractere in texto
+        if unicodedata.category(caractere) != "Mn"
+    )
+    return texto
 
 def cadastrar_produto():
     global proximo_codigo
@@ -144,6 +154,11 @@ def listar_produtos():
 
 def buscar_produto():
     print("\n--- BUSCAR PRODUTO ---")
+
+    if len(produtos) == 0:
+        print("\nNenhum produto cadastrado!")
+        return
+
     print("1 - Buscar por código")
     print("2 - Buscar por categoria")
     print("3 - Buscar por marca")
@@ -156,43 +171,51 @@ def buscar_produto():
     if tipo_busca == "1":
         codigo = ler_inteiro_positivo("Digite o código do produto: ")
 
-        for produto in produtos:
-            if produto["codigo"] == codigo:
-                encontrados.append(produto)
+        produto = buscar_por_codigo(codigo)
+
+        if produto is not None:
+            encontrados.append(produto)
                 
-    elif tipo_busca == "2":
-        categoria = input("Digite a categoria do produto: ").lower()
+    elif tipo_busca in ["2", "3", "4"]:
+
+        if tipo_busca == "2":
+            campo = "categoria"
+            nome_campo = "categoria"
+
+        elif tipo_busca == "3":
+            campo = "marca"
+            nome_campo = "marca"
+
+        else:
+            campo = "modelo"
+            nome_campo = "modelo"
+
+        termo = input(f"Digite a {nome_campo}: ").strip()
+
+        if termo == "":
+            print("\nA busca não pode ficar vazia.")
+            return
+
+        termo_normalizado = normalizar_texto(termo)
 
         for produto in produtos:
-            if produto["categoria"].lower() == categoria:
-                encontrados.append(produto)
+            valor_produto = normalizar_texto(produto[campo])
 
-    elif tipo_busca == "3":
-        marca = input("Digite a marca do produto: ").lower()
-
-        for produto in produtos:
-            if produto["marca"].lower() == marca:
-                encontrados.append(produto)
-
-    elif tipo_busca == "4":
-        modelo = input("Digite o modelo: ").lower()
-
-        for produto in produtos:
-            if produto["modelo"].lower() == modelo:
+            if termo_normalizado in valor_produto:
                 encontrados.append(produto)
 
     else:
-        print("Opção inválida!")
+        print("\nOpção inválida.")
         return
 
     if len(encontrados) == 0:
         print("\nNenhum produto encontrado.")
         return
 
-    print("\n--- PRODUTOS ENCONTRADOS ---")
+    print(f"\n--- PRODUTOS ENCONTRADOS: {len(encontrados)} ---")
 
     for produto in encontrados:
-        print ("\n----------------------------------")
+        print("\n-------------------------------")
         print(f"Código: {produto['codigo']}")
         print(f"Categoria: {produto['categoria']}")
         print(f"Marca: {produto['marca']}")
