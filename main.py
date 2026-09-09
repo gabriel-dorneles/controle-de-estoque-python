@@ -14,24 +14,99 @@ def salvar_produtos():
     with open(ARQUIVO, "w", encoding="utf-8") as arquivo:
         json.dump(produtos, arquivo, indent=4, ensure_ascii=False)
 
-
 produtos = carregar_produtos()
 if len(produtos) > 0:
     proximo_codigo = max(produto["codigo"] for produto in produtos) + 1
 else:
     proximo_codigo = 1
 
+def ler_texto_obrigatorio(mensagem):
+    while True:
+        valor = input(mensagem).strip()
+
+        if valor != "":
+            return valor
+        
+        print("Esse campo não pode ficar vazio!")
+
+def ler_inteiro_positivo(mensagem):
+    while True:
+        try:
+            valor = int(input(mensagem))
+
+            if valor > 0:
+                return valor
+
+            print("Digite um número maior que zero!")
+
+        except ValueError:
+            print("Digite apenas números inteiros")      
+
+def ler_inteiro_nao_negativo(mensagem):
+    while True:
+        try:
+            valor = int(input(mensagem))
+
+            if valor >= 0:
+                return valor
+
+            print("O valor não pode ser negativo!")
+
+        except ValueError:
+            print("Digite apenas números inteiros!")
+
+def ler_preco(mensagem):
+    while True:
+        entrada = input(mensagem).strip().replace(",", ".")
+        try:
+            valor = float(entrada)
+
+            if valor >= 0:
+                return valor
+
+            print("O preço não pode ser negativo.")
+        except ValueError:
+            print("Digite um preço válido.")
+
+def ler_texto_opcional(mensagem, valor_atual):
+    valor = input(mensagem).strip()
+
+    if valor == "":
+        return valor_atual
+
+    return valor
+
+def ler_preco_opcional(mensagem, valor_atual):
+    while True:
+        entrada = input(mensagem).strip()
+
+        if entrada == "":
+            return valor_atual
+
+        entrada = entrada.replace(",", ".")
+        try:
+            valor = float(entrada)
+
+            if valor>= 0:
+                return valor
+
+            print("O preço não pode ser negativo!")
+
+        except ValueError:
+            print("Digite um preço válido ou pressione Enter para manter o valor atual.")
+
+
 def cadastrar_produto():
     global proximo_codigo
     print("\n--- CADASTRO DE PRODUTO ---")
     codigo = proximo_codigo
 
-    categoria = input("Categoria: ")
-    marca = input("Marca: ")
-    modelo = input("Modelo: ")
-    cor = input("Cor: ")
-    quantidade = int(input("Quantidade: "))
-    preco = float(input("Preço: R$ "))
+    categoria = ler_texto_obrigatorio("Categoria: ")
+    marca = ler_texto_obrigatorio("Marca: ")
+    modelo = ler_texto_obrigatorio("Modelo: ")
+    cor = ler_texto_obrigatorio("Cor: ")
+    quantidade = ler_inteiro_nao_negativo("Quantidade: ")
+    preco = ler_preco("Preço: R$ ")
 
     produto = {
         "codigo": codigo,
@@ -79,7 +154,7 @@ def buscar_produto():
     encontrados = []
 
     if tipo_busca == "1":
-        codigo = int(input("Digite o código do produto: "))
+        codigo = ler_inteiro_positivo("Digite o código do produto: ")
 
         for produto in produtos:
             if produto["codigo"] == codigo:
@@ -135,7 +210,7 @@ def buscar_por_codigo(codigo):
 
 def entrada_estoque():
     print("\n--- ENTRADA DE ESTOQUE ---")
-    codigo = int(input("Digite o código do produto: "))
+    codigo = ler_inteiro_positivo("Digite o código do produto: ")
     produto = buscar_por_codigo(codigo)
 
     if produto is None:
@@ -144,7 +219,7 @@ def entrada_estoque():
 
     print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
     print(f"Estoque atual: {produto['quantidade']}")
-    quantidade = int(input("Quantidade de entrada: "))
+    quantidade = ler_inteiro_positivo("Quantidade de entrada: ")
 
     if quantidade <= 0:
         print("\nA quantidade deve ser maior que zero.")
@@ -157,7 +232,7 @@ def entrada_estoque():
 
 def saida_estoque():
     print("\n--- SAÍDA DE ESTOQUE ---")
-    codigo = int(input("Digite o código do produto: "))
+    codigo = ler_inteiro_positivo("Digite o código do produto: ")
     produto = buscar_por_codigo(codigo)
 
     if produto is None:
@@ -166,7 +241,7 @@ def saida_estoque():
 
     print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
     print(f"Estoque atual: {produto['quantidade']}")
-    quantidade = int(input("Quantidade de saída: "))
+    quantidade = ler_inteiro_positivo("Quantidade de saída: ")
 
     if quantidade <= 0:
         print("\nA quantidade deve ser maior que zero.")
@@ -183,42 +258,46 @@ def saida_estoque():
 
 def editar_produto():
     print("\n--- EDITAR PRODUTO ---")
-    codigo = int(input("Digite o código do produto: "))
+    codigo = ler_inteiro_positivo("Digite o código do produto: ")
     produto = buscar_por_codigo(codigo)
 
     if produto is None:
         print("\nProduto não encontrado!")
         return
     
-    print("\nDeixe em branco o campo que não deseja alterar")
+    print("\nPressione Enter para manter o valor atual")
 
-    categoria = input(f"Categoria [{produto['categoria']}]: ")
-    marca = input(f"Marca [{produto['marca']}]: ")
-    modelo = input(f"Modelo [{produto['modelo']}]: ")
-    cor = input(f"Cor [{produto['cor']}]: ")
-    preco = input(f"Preço [{produto['preco']:.2f}]: ")
+    produto["categoria"] = ler_texto_opcional(
+        f"Categoria [{produto['categoria']}]: ",
+        produto["categoria"]
+    )
 
-    if categoria != "":
-        produto["categoria"] = categoria
+    produto["marca"] = ler_texto_opcional(
+        f"Marca [{produto['marca']}]: ",
+        produto["marca"]
+    )
 
-    if marca != "":
-        produto["marca"] = marca
+    produto["modelo"] = ler_texto_opcional(
+        f"Modelo [{produto['modelo']}]: ",
+        produto["modelo"]
+    )
 
-    if modelo != "":
-        produto["modelo"] = modelo
+    produto["cor"] = ler_texto_opcional(
+        f"Cor [{produto['cor']}]: ",
+        produto["cor"]
+    )
 
-    if cor != "":
-        produto["cor"] = cor
-
-    if preco != "":
-        produto["preco"] = float(preco)
+    produto["preco"] = ler_preco_opcional(
+        f"Preço [{produto['preco']:.2f}]: ",
+        produto["preco"]
+    )
 
     salvar_produtos()
     print("\nProduto atualizado com sucesso!")
 
 def excluir_produto():
     print("\n--- EXCLUIR PRODUTO ---")
-    codigo = int(input("Digite o código do produto: "))
+    codigo = ler_inteiro_positivo("Digite o código do produto: ")
     produto = buscar_por_codigo(codigo)
 
     if produto is None:

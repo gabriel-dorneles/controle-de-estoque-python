@@ -2,10 +2,10 @@
     {
         "codigo": 1,
         "categoria": "Máquina de corte",
-        "marca": "Kemei",
-        "modelo": "km2299",
+        "marca": "wmark",
+        "modelo": "ng453",
         "cor": "Dourada",
-        "quantidade": 5,
+        "quantidade": 6,
         "preco": 149.9
     },
     {
@@ -25,5 +25,14 @@
         "cor": "cinza",
         "quantidade": 3,
         "preco": 390.0
+    },
+    {
+        "codigo": 5,
+        "categoria": "secador",
+        "marca": "Prosper",
+        "modelo": "P-6605",
+        "cor": "Cinza",
+        "quantidade": 0,
+        "preco": 149.9
     }
 ]
