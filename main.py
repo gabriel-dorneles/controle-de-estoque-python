@@ -28,6 +28,18 @@ if len(produtos) > 0:
 else:
     proximo_codigo = 1
 
+def exibir_produto(produto):
+    print("\n----------------------------")
+    print(f"Código: {produto['codigo']}")
+    print(f"Categoria: {produto['categoria']}")
+    print(f"Marca: {produto['marca']}")
+    print(f"Modelo: {produto['modelo']}")
+    print(f"Cor: {produto['cor']}")
+    print(f"Quantidade: {produto['quantidade']}")
+    print(f"Estoque mínimo: {produto['estoque_minimo']}")
+    print(f"Preço de custo: {formatar_moeda(produto['preco_custo'])}")
+    print(f"Preço de venda: {formatar_moeda(produto['preco'])}")
+
 def ler_texto_obrigatorio(mensagem):
     while True:
         valor = input(mensagem).strip()
@@ -181,16 +193,7 @@ def listar_produtos():
         return
 
     for produto in produtos:
-        print("\n----------------------------")
-        print(f"Código: {produto['codigo']}")
-        print(f"Categoria: {produto['categoria']}")
-        print(f"Marca: {produto['marca']}")
-        print(f"Modelo: {produto['modelo']}")
-        print(f"Cor: {produto['cor']}")
-        print(f"Quantidade: {produto['quantidade']}")
-        print(f"Estoque mínimo: {produto['estoque_minimo']}")
-        print(f"Preço de custo: {formatar_moeda(produto['preco_custo'])}")
-        print(f"Preço de venda: {formatar_moeda(produto['preco'])}")
+        exibir_produto(produto)
 
 def buscar_produto():
     print("\n--- BUSCAR PRODUTO ---")
@@ -255,15 +258,7 @@ def buscar_produto():
     print(f"\n--- PRODUTOS ENCONTRADOS: {len(encontrados)} ---")
 
     for produto in encontrados:
-        print("\n-------------------------------")
-        print(f"Código: {produto['codigo']}")
-        print(f"Categoria: {produto['categoria']}")
-        print(f"Marca: {produto['marca']}")
-        print(f"Modelo: {produto['modelo']}")
-        print(f"Cor: {produto['cor']}")
-        print(f"Quantidade: {produto['quantidade']}")
-        print(f"Preço de custo: {formatar_moeda(produto['preco_custo'])}")
-        print(f"Preço de venda: {formatar_moeda(produto['preco'])}")
+        exibir_produto(produto)
 
 
 def buscar_por_codigo(codigo):
@@ -285,10 +280,6 @@ def entrada_estoque():
     print(f"Estoque atual: {produto['quantidade']}")
     quantidade = ler_inteiro_positivo("Quantidade de entrada: ")
 
-    if quantidade <= 0:
-        print("\nA quantidade deve ser maior que zero.")
-        return
-
     produto["quantidade"] += quantidade
     salvar_produtos()
     print("\nEntrada realizada com sucesso!")
@@ -306,10 +297,6 @@ def saida_estoque():
     print(f"\nProduto: {produto['marca']} {produto['modelo']} - {produto['cor']}")
     print(f"Estoque atual: {produto['quantidade']}")
     quantidade = ler_inteiro_positivo("Quantidade de saída: ")
-
-    if quantidade <= 0:
-        print("\nA quantidade deve ser maior que zero.")
-        return
 
     if quantidade > produto["quantidade"]:
         print("\nEstoque insuficiente!")
@@ -400,7 +387,7 @@ def relatorio_estoque():
     print("\n========== RELATÓRIO DO ESTOQUE ==========")
 
     if len(produtos) == 0:
-        pront("\nNenhum produto cadastrado!")
+        print("\nNenhum produto cadastrado!")
         return
 
     total_unidades = 0
@@ -412,14 +399,19 @@ def relatorio_estoque():
         total_unidades += produto["quantidade"]
         valor_custo_total += (produto["quantidade"] * produto["preco_custo"])
         valor_venda_total += (produto["quantidade"] * produto["preco"])
-        categoria = produto ["categoria"]
-
-        if categoria in categorias:
-            categorias[categoria] += produto["quantidade"]
-        else:
-            categorias[categoria] = produto["quantidade"]
         
-        margem_potencial = valor_venda_total - valor_custo_total
+        categoria_original = produto["categoria"]
+        categoria_normalizada = normalizar_texto(categoria_original)
+
+        if categoria_normalizada in categorias:
+            categorias[categoria_normalizada]["quantidade"] += produto["quantidade"]
+        else:
+            categorias[categoria_normalizada] = {
+                "nome": categoria_original,
+                "quantidade": produto["quantidade"]
+            }
+        
+    margem_potencial = valor_venda_total - valor_custo_total
 
     print(f"\nProdutos cadastrados: {len(produtos)}")
     print(f"Total de unidades: {total_unidades}")
@@ -429,8 +421,8 @@ def relatorio_estoque():
 
     print("\n--- UNIDADES POR CATEGORIA ---")
 
-    for categoria, quantidade in categorias.items():
-        print(f"{categoria}: {quantidade}")
+    for dados in categorias.values():
+        print(f"{dados['nome']}: {dados['quantidade']}")
 
     print("\n--- ESTOQUE BAIXO ---")
 
@@ -445,12 +437,8 @@ def relatorio_estoque():
                 f"Mínimo: {produto['estoque_minimo']}"
             )
             encontrou_estoque_baixo = True
-    if encontrou_estoque_baixo == False:
+    if not encontrou_estoque_baixo:
         print("Nenhum produto com estoque baixo.")
-
-
-
-
 
 
 while True:
@@ -498,4 +486,4 @@ while True:
         print("\n Sistema encerrado.")
         break
     else:
-        print("\nOpção ainda não implementada.")
+        print("\nOpção inválida. Escolha uma opção entre 0 e 8.")

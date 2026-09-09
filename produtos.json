@@ -1,25 +1,14 @@
 [
     {
-        "codigo": 1,
-        "categoria": "Máquina de corte",
-        "marca": "wmark",
-        "modelo": "ng453",
-        "cor": "Dourada",
-        "quantidade": 6,
-        "preco": 149.9,
-        "preco_custo": 0.0,
-        "estoque_minimo": 0
-    },
-    {
         "codigo": 3,
         "categoria": "Máquina de acabamento",
         "marca": "JRL",
         "modelo": "2020T",
         "cor": "Prata",
         "quantidade": 2,
-        "preco": 870.0,
-        "preco_custo": 0.0,
-        "estoque_minimo": 0
+        "preco": 860.0,
+        "preco_custo": 590.0,
+        "estoque_minimo": 3
     },
     {
         "codigo": 4,
@@ -27,7 +16,7 @@
         "marca": "Taiff",
         "modelo": "extreme",
         "cor": "cinza",
-        "quantidade": 3,
+        "quantidade": 0,
         "preco": 390.0,
         "preco_custo": 0.0,
         "estoque_minimo": 0
@@ -52,6 +41,17 @@
         "quantidade": 2,
         "preco_custo": 120.0,
         "preco": 180.0,
+        "estoque_minimo": 3
+    },
+    {
+        "codigo": 7,
+        "categoria": "Maquina de corte",
+        "marca": "JRL",
+        "modelo": "2020c",
+        "cor": "dourada",
+        "quantidade": 1,
+        "preco_custo": 600.0,
+        "preco": 950.0,
         "estoque_minimo": 3
     }
 ]
