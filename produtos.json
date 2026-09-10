@@ -1,57 +1,46 @@
 [
     {
-        "codigo": 3,
+        "codigo": 1,
+        "categoria": "Máquina de corte",
+        "marca": "Kemei",
+        "modelo": "KM-2299",
+        "cor": "Dourada",
+        "quantidade": 5,
+        "preco_custo": 95.0,
+        "preco": 149.9,
+        "estoque_minimo": 2
+    },
+    {
+        "codigo": 2,
         "categoria": "Máquina de acabamento",
-        "marca": "JRL",
-        "modelo": "2020T",
-        "cor": "Prata",
+        "marca": "Wmark",
+        "modelo": "NG-202",
+        "cor": "Preta",
         "quantidade": 2,
-        "preco": 860.0,
-        "preco_custo": 590.0,
+        "preco_custo": 110.0,
+        "preco": 169.9,
         "estoque_minimo": 3
+    },
+    {
+        "codigo": 3,
+        "categoria": "Secador",
+        "marca": "Taiff",
+        "modelo": "Style",
+        "cor": "Preto",
+        "quantidade": 4,
+        "preco_custo": 210.0,
+        "preco": 299.9,
+        "estoque_minimo": 2
     },
     {
         "codigo": 4,
-        "categoria": "Prancha",
-        "marca": "Taiff",
-        "modelo": "extreme",
-        "cor": "cinza",
-        "quantidade": 0,
-        "preco": 390.0,
-        "preco_custo": 0.0,
-        "estoque_minimo": 0
-    },
-    {
-        "codigo": 5,
-        "categoria": "secador",
-        "marca": "Prosper",
-        "modelo": "P-6605",
-        "cor": "Cinza",
-        "quantidade": 0,
-        "preco": 149.9,
-        "preco_custo": 0.0,
-        "estoque_minimo": 0
-    },
-    {
-        "codigo": 6,
         "categoria": "Máquina de corte",
         "marca": "Wmark",
-        "modelo": "ng-304",
-        "cor": "dourada",
-        "quantidade": 2,
-        "preco_custo": 120.0,
-        "preco": 180.0,
-        "estoque_minimo": 3
-    },
-    {
-        "codigo": 7,
-        "categoria": "Maquina de corte",
-        "marca": "JRL",
-        "modelo": "2020c",
-        "cor": "dourada",
-        "quantidade": 1,
-        "preco_custo": 600.0,
-        "preco": 950.0,
-        "estoque_minimo": 3
+        "modelo": "NG-304",
+        "cor": "Prata",
+        "quantidade": 3,
+        "preco_custo": 130.0,
+        "preco": 199.9,
+        "estoque_minimo": 2
     }
 ]

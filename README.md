@@ -104,6 +104,11 @@ Secador: 4
 
 --- ESTOQUE BAIXO ---
 Código 3 | Kemei KM-2299 | Atual: 2 | Mínimo: 3
+
+## Demonstração
+
+![Relatório do sistema de controle de estoque](docs/relatorio-estoque.png)
+
 ```
 
 ## Estrutura do projeto
@@ -111,6 +116,8 @@ Código 3 | Kemei KM-2299 | Atual: 2 | Mínimo: 3
 ```text
 controle-de-estoque-python/
 │
+├── docs/
+│   └── relatorio-estoque.png
 ├── main.py
 ├── produtos.json
 ├── README.md
